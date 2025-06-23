@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { auth, db } from "@/lib/firebase";
-import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp, updateDoc, increment } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
 import { updateProfile as updateFirebaseProfile } from "firebase/auth";
 
@@ -91,4 +91,27 @@ export async function updateUserProfile(values: z.infer<typeof profileSchema>) {
     revalidatePath("/profile");
     revalidatePath("/");
     return { success: true };
+}
+
+export async function clapForPost(postId: string, count: number) {
+  const user = auth.currentUser;
+
+  if (!user) {
+    return { success: false, error: "You must be logged in to clap." };
+  }
+  if (!postId || count <= 0) {
+    return { success: false, error: "Invalid clap request." };
+  }
+
+  try {
+    const postRef = doc(db, "posts", postId);
+    await updateDoc(postRef, {
+      likes: increment(count),
+    });
+  } catch (error) {
+    console.error("Error clapping for post:", error);
+    return { success: false, error: "Failed to update claps in database." };
+  }
+
+  return { success: true };
 }
