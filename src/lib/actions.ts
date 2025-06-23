@@ -130,9 +130,8 @@ const commentSchema = z.object({
   postId: z.string(),
 });
 
-export async function addComment(values: z.infer<typeof commentSchema>) {
-  const user = auth.currentUser;
-  if (!user) {
+export async function addComment(values: z.infer<typeof commentSchema>, authorId: string) {
+  if (!authorId) {
     return { success: false, error: "You must be logged in to comment." };
   }
   
@@ -144,7 +143,7 @@ export async function addComment(values: z.infer<typeof commentSchema>) {
   const { content, postId } = validatedFields.data;
 
   try {
-    const profileRef = doc(db, "profiles", user.uid);
+    const profileRef = doc(db, "profiles", authorId);
     const profileSnap = await getDoc(profileRef);
     if (!profileSnap.exists()) {
       return { success: false, error: "User profile not found." };
@@ -156,7 +155,7 @@ export async function addComment(values: z.infer<typeof commentSchema>) {
     // Add the comment to a top-level collection
     await addDoc(collection(db, "comments"), {
       postId,
-      authorId: user.uid,
+      authorId: authorId,
       authorName: profileData.name,
       authorPhotoURL: profileData.photoURL,
       content,

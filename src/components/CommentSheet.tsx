@@ -87,7 +87,7 @@ export function CommentSheet({ isOpen, onOpenChange, postId, postAuthorName }: C
       return;
     }
     
-    const result = await addComment({ ...values, postId });
+    const result = await addComment({ ...values, postId }, user.uid);
 
     if (result.success) {
       form.reset();
