@@ -24,7 +24,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-body antialiased h-full flex flex-col">
+      <body className="font-body antialiased h-full flex flex-col bg-zinc-50 dark:bg-black">
         <AuthProvider>
           <Header />
           <div className="flex-1">

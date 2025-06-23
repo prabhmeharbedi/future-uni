@@ -1,24 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import type { Post } from "@/lib/types";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Hand } from "lucide-react";
+import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal } from "lucide-react";
 import { UserAvatar } from "@/components/UserAvatar";
 import { useAuth } from "@/hooks/use-auth";
-import { clapForPost } from "@/lib/actions";
+import { likePost } from "@/lib/actions";
 import { cn } from "@/lib/utils";
-
-const MAX_CLAPS = 50;
-const CLAP_DEBOUNCE_MS = 1000;
+import { useToast } from "@/hooks/use-toast";
 
 interface PostCardProps {
   post: Post;
@@ -26,108 +18,93 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   const { user } = useAuth();
+  const { toast } = useToast();
   
-  const [displayLikes, setDisplayLikes] = useState(post.likes);
-  const [userClapCount, setUserClapCount] = useState(0);
-  const pendingClapsRef = useRef(0);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const [clapBubbleCount, setClapBubbleCount] = useState(0);
-  const [showClapBubble, setShowClapBubble] = useState(false);
-  const bubbleTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(post.likes);
 
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-      if (bubbleTimerRef.current) {
-        clearTimeout(bubbleTimerRef.current);
-      }
-    };
-  }, []);
-
-  const sendClapsToServer = async () => {
-    if (pendingClapsRef.current === 0) return;
-
-    const clapsToSend = pendingClapsRef.current;
-    pendingClapsRef.current = 0; 
-
-    const result = await clapForPost(post.id, clapsToSend, user?.uid);
-
-    if (!result.success) {
-      setDisplayLikes((prev) => prev - clapsToSend);
-      console.error("Failed to save claps:", result.error);
+  const handleLikeClick = async () => {
+    if (!user) {
+       toast({
+        variant: "destructive",
+        title: "You must be logged in to like a post.",
+      });
+      return;
     }
-  };
-
-  const handleClap = () => {
-    if (!user || userClapCount >= MAX_CLAPS) return;
-
-    const newClapCount = userClapCount + 1;
-    setUserClapCount(newClapCount);
-    setDisplayLikes((prev) => prev + 1);
-    pendingClapsRef.current += 1;
     
-    setClapBubbleCount(prev => prev + 1);
-    setShowClapBubble(true);
-    if (bubbleTimerRef.current) clearTimeout(bubbleTimerRef.current);
-    bubbleTimerRef.current = setTimeout(() => {
-        setShowClapBubble(false);
-        setClapBubbleCount(0);
-    }, 1000);
-
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
+    // To keep the UI snappy, we update the state immediately
+    // and then revert it if the server call fails.
+    if (!isLiked) {
+      setIsLiked(true);
+      setLikeCount((prev) => prev + 1);
+      const result = await likePost(post.id, user.uid);
+      if (!result.success) {
+        // Revert state on failure
+        setIsLiked(false);
+        setLikeCount((prev) => prev - 1);
+        toast({
+          variant: "destructive",
+          title: "Failed to like post.",
+          description: result.error,
+        });
+      }
     }
-    debounceTimerRef.current = setTimeout(sendClapsToServer, CLAP_DEBOUNCE_MS);
   };
-  
-  const hasClapped = userClapCount > 0;
 
   return (
-    <Card className="mb-4">
-      <CardHeader>
+    <div className="rounded-md border bg-card text-card-foreground">
+      {/* Card Header */}
+      <div className="flex items-center p-4">
+        <UserAvatar name={post.authorName} imageUrl={post.authorPhotoURL} className="h-8 w-8" />
+        <p className="font-semibold text-sm ml-3">{post.authorName}</p>
+        <Button variant="ghost" size="icon" className="ml-auto h-8 w-8">
+            <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Card Image */}
+      {post.imageUrl && (
+        <div className="relative aspect-square w-full">
+          <Image
+            src={post.imageUrl}
+            alt="Post image"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            data-ai-hint="social media post"
+          />
+        </div>
+      )}
+
+      {/* Card Actions */}
+      <div className="p-4">
         <div className="flex items-center space-x-4">
-          <UserAvatar name={post.authorName} imageUrl={post.authorPhotoURL} />
-          <div>
-            <p className="font-semibold">{post.authorName}</p>
-            <p className="text-sm text-muted-foreground">
-              {formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true })}
-            </p>
-          </div>
+          <Button variant="ghost" size="icon" onClick={handleLikeClick}>
+            <Heart className={cn("h-6 w-6", isLiked && "text-red-500 fill-red-500")} />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <MessageCircle className="h-6 w-6" />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <Send className="h-6 w-6" />
+          </Button>
+          <Button variant="ghost" size="icon" className="ml-auto">
+            <Bookmark className="h-6 w-6" />
+          </Button>
         </div>
-      </CardHeader>
-      <CardContent>
-        <p className="whitespace-pre-wrap">{post.content}</p>
-        {post.imageUrl && (
-          <div className="mt-4 relative aspect-video w-full overflow-hidden rounded-lg border">
-            <Image
-              src={post.imageUrl}
-              alt="Post image"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          </div>
-        )}
-      </CardContent>
-      <CardFooter className="flex items-center justify-between">
-        <div className="flex items-center space-x-2 text-muted-foreground">
-          <Hand className="h-5 w-5" />
-          <span>{displayLikes}</span>
+      </div>
+
+      {/* Card Footer */}
+      <div className="px-4 pb-4 space-y-2">
+        <p className="font-semibold text-sm">{likeCount.toLocaleString()} likes</p>
+        <div>
+          <span className="font-semibold text-sm mr-2">{post.authorName}</span>
+          <span className="text-sm">{post.content}</span>
         </div>
-        <div className="relative">
-             <Button onClick={handleClap} disabled={!user || userClapCount >= MAX_CLAPS} variant="outline" size="sm" className="relative transition-transform duration-100 ease-out active:scale-95">
-                <Hand className={cn("mr-2 h-4 w-4", hasClapped && 'text-primary fill-primary')} />
-                 Clap
-            </Button>
-            {showClapBubble && (
-                 <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-10 h-10 flex items-center justify-center bg-primary text-primary-foreground rounded-full text-sm font-bold pointer-events-none animate-in fade-in zoom-in-50">
-                    +{clapBubbleCount}
-                </div>
-            )}
-        </div>
-      </CardFooter>
-    </Card>
+        <p className="text-xs text-muted-foreground uppercase">
+          {formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true })}
+        </p>
+      </div>
+    </div>
   );
 }

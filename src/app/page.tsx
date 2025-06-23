@@ -29,17 +29,16 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="container mx-auto max-w-2xl py-8 px-4">
+    <main className="container mx-auto max-w-lg py-6 px-4">
       {!authLoading && user && <CreatePostForm user={user} />}
 
       {loading ? (
-        <div className="space-y-4">
-          <Skeleton className="h-48 w-full" />
-          <Skeleton className="h-48 w-full" />
-          <Skeleton className="h-48 w-full" />
+        <div className="space-y-8">
+          <Skeleton className="h-96 w-full rounded-md border" />
+          <Skeleton className="h-96 w-full rounded-md border" />
         </div>
       ) : (
-        <div className="mt-6">
+        <div className="mt-6 space-y-8">
           {posts.map((post) => (
             <PostCard key={post.id} post={post} />
           ))}
