@@ -12,7 +12,7 @@ import { PostCard } from "@/components/PostCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Lightbulb, Users, Award, MoveRight } from "lucide-react";
+import { Cpu, Fingerprint, Network, MoveRight } from "lucide-react";
 
 function FeatureCard({
   icon,
@@ -24,8 +24,8 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <Card className="p-6 text-center flex flex-col items-center hover:border-primary transition-colors duration-300 shadow-sm">
-      <div className="mb-4 bg-primary/10 text-primary p-4 rounded-full">{icon}</div>
+    <Card className="p-6 text-center flex flex-col items-center bg-card/50 backdrop-blur-sm border-primary/20 hover:border-primary transition-colors duration-300 shadow-lg">
+      <div className="mb-4 bg-primary/10 text-primary p-4 rounded-full border border-primary/30">{icon}</div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-muted-foreground">{description}</p>
     </Card>
@@ -37,16 +37,15 @@ function LandingPage() {
     <main className="container mx-auto px-4 py-8 md:py-16">
       <div className="text-center flex flex-col items-center py-16 md:py-24">
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">
-          Unleash Your Aura.
+          SYSTEM ONLINE.
         </h1>
-        <p className="mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground">
-          A new social universe where creativity glows. Share your moments,
-          collect Aura Points, and connect with a community that shines.
+        <p className="mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground font-mono">
+          A raw social network for decentralized minds. Transmit data, earn reputation, and interface with the grid.
         </p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4">
           <Button asChild size="lg">
             <Link href="/signup">
-              Join Now <MoveRight className="ml-2" />
+              Jack In <MoveRight className="ml-2" />
             </Link>
           </Button>
           <Button
@@ -54,20 +53,20 @@ function LandingPage() {
             variant="outline"
             size="lg"
           >
-            <Link href="/login">Log In</Link>
+            <Link href="/login">Authenticate</Link>
           </Button>
         </div>
       </div>
 
       <div className="relative my-16 md:my-24">
-        <Card className="p-4 md:p-6 shadow-lg">
+        <Card className="p-4 md:p-6 shadow-2xl bg-card/50 backdrop-blur-lg border-primary/20">
           <div className="aspect-video w-full relative">
             <Image
               src="https://placehold.co/1200x675.png"
-              alt="Aura App Showcase"
+              alt="Circuit App Showcase"
               fill
               className="rounded-md object-cover"
-              data-ai-hint="social media app interface"
+              data-ai-hint="robotic user interface"
             />
           </div>
         </Card>
@@ -76,27 +75,27 @@ function LandingPage() {
       <div className="my-16 md:my-24">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-            A Canvas for Your Creativity
+            A Terminal for Your Consciousness
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Everything you need to share your unique vibe.
+          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground font-mono">
+            Directives for interaction within the system.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <FeatureCard
-            icon={<Lightbulb className="w-8 h-8" />}
-            title="Express Freely"
-            description="Share your thoughts, photos, and stories in a space that values authenticity and creative expression."
+            icon={<Cpu className="w-8 h-8" />}
+            title="Transmit Data"
+            description="Broadcast text and visual data streams. Authenticity is monitored. Falsehoods will be purged."
           />
           <FeatureCard
-            icon={<Award className="w-8 h-8" />}
-            title="Collect Aura Points"
-            description="Your creativity is valuable. Earn Aura Points from the community and see your influence grow."
+            icon={<Fingerprint className="w-8 h-8" />}
+            title="Gain Reputation"
+            description="Your value is quantified. Earn Aura Points from the network. Increase your system clearance."
           />
           <FeatureCard
-            icon={<Users className="w-8 h-8" />}
-            title="Connect & Inspire"
-            description="Join a vibrant community of creators and tastemakers. Discover new ideas and inspire others."
+            icon={<Network className="w-8 h-8" />}
+            title="Interface & Evolve"
+            description="Connect to a network of distributed nodes. Absorb new protocols. Evolve your output."
           />
         </div>
       </div>
@@ -106,10 +105,10 @@ function LandingPage() {
           href="/"
           className="text-2xl font-bold tracking-tight text-primary"
         >
-          Aura
+          Circuit
         </Link>
-        <p className="text-sm text-muted-foreground mt-2">
-          © {new Date().getFullYear()} Aura. All rights reserved.
+        <p className="text-sm text-muted-foreground mt-2 font-mono">
+          © {new Date().getFullYear()} Circuit Systems. All rights reserved.
         </p>
       </footer>
     </main>

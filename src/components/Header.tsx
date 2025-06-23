@@ -27,10 +27,10 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="text-2xl font-bold tracking-tight text-primary">
-          Aura
+        <Link href="/" className="text-2xl font-bold tracking-tight text-primary font-mono">
+          Circuit
         </Link>
         <div className="flex items-center gap-4">
           {loading ? (
@@ -72,10 +72,10 @@ export function Header() {
           ) : (
             <div className="flex items-center gap-2">
               <Button asChild variant="ghost">
-                <Link href="/login">Log In</Link>
+                <Link href="/login">Authenticate</Link>
               </Button>
               <Button asChild>
-                <Link href="/signup">Sign Up</Link>
+                <Link href="/signup">Jack In</Link>
               </Button>
             </div>
           )}

@@ -5,8 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: "Aura",
-  description: "A creative social media platform",
+  title: "Circuit",
+  description: "A raw, robotic social network.",
 };
 
 export default function RootLayout({
@@ -15,12 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full dark">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
       </head>
