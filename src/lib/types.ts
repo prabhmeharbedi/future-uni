@@ -14,6 +14,6 @@ export interface Post {
   authorPhotoURL: string;
   content: string;
   imageUrl?: string;
-  likes: number;
+  auraPoints: number;
   createdAt: Timestamp;
 }

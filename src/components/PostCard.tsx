@@ -5,14 +5,14 @@ import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import type { Post } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal } from "lucide-react";
+import { Heart, MessageCircle, Send, MoreHorizontal } from "lucide-react";
 import { UserAvatar } from "@/components/UserAvatar";
 import { useAuth } from "@/hooks/use-auth";
-import { clapForPost } from "@/lib/actions";
+import { addAuraPoints } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
-interface ClapBubble {
+interface AuraPointBubble {
   id: number;
   count: number;
 }
@@ -25,55 +25,53 @@ export function PostCard({ post }: PostCardProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   
-  const [displayLikes, setDisplayLikes] = useState(post.likes);
-  const [localClaps, setLocalClaps] = useState(0);
-  const [clapBubbles, setClapBubbles] = useState<ClapBubble[]>([]);
+  const [displayAuraPoints, setDisplayAuraPoints] = useState(post.auraPoints);
+  const [localAuraPoints, setLocalAuraPoints] = useState(0);
+  const [auraPointBubbles, setAuraPointBubbles] = useState<AuraPointBubble[]>([]);
   const [isPending, startTransition] = useTransition();
 
-  const clapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const clapButtonRef = useRef<HTMLButtonElement>(null);
+  const auraPointTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const auraButtonRef = useRef<HTMLButtonElement>(null);
 
-  const MAX_CLAPS = 50;
+  const MAX_AURA_POINTS = 50;
 
-  const handleClap = () => {
+  const handleAddAuraPoint = () => {
     if (!user) {
-       toast({ variant: "destructive", title: "You must be logged in to clap." });
+       toast({ variant: "destructive", title: "You must be logged in to add aura points." });
        return;
     }
     
-    if (localClaps >= MAX_CLAPS) {
-      toast({ title: "You've reached the maximum claps for this post!" });
+    if (localAuraPoints >= MAX_AURA_POINTS) {
+      toast({ title: "You've reached the maximum aura points for this post!" });
       return;
     }
     
-    const newClaps = localClaps + 1;
-    setLocalClaps(newClaps);
-    setDisplayLikes(prev => prev + 1);
+    const newPoints = localAuraPoints + 1;
+    setLocalAuraPoints(newPoints);
+    setDisplayAuraPoints(prev => prev + 1);
 
-    // Show bubble
-    setClapBubbles(prev => [...prev, { id: Date.now(), count: newClaps }]);
+    setAuraPointBubbles(prev => [...prev, { id: Date.now(), count: newPoints }]);
 
-    if (clapTimeoutRef.current) {
-      clearTimeout(clapTimeoutRef.current);
+    if (auraPointTimeoutRef.current) {
+      clearTimeout(auraPointTimeoutRef.current);
     }
     
-    clapTimeoutRef.current = setTimeout(() => {
-      if (localClaps > 0) {
-        saveClaps(localClaps);
-        setLocalClaps(0);
+    auraPointTimeoutRef.current = setTimeout(() => {
+      if (localAuraPoints > 0) {
+        saveAuraPoints(localAuraPoints);
+        setLocalAuraPoints(0);
       }
-    }, 1500); // Send to server after 1.5s of inactivity
+    }, 1500);
   };
   
-  const saveClaps = (clapsToSend: number) => {
+  const saveAuraPoints = (pointsToSend: number) => {
     startTransition(async () => {
-      const result = await clapForPost(post.id, clapsToSend, user!.uid);
+      const result = await addAuraPoints(post.id, pointsToSend, user!.uid);
       if (!result.success) {
-        // Revert optimistic update on failure
-        setDisplayLikes((prev) => prev - clapsToSend);
+        setDisplayAuraPoints((prev) => prev - pointsToSend);
         toast({
           variant: "destructive",
-          title: "Failed to save claps.",
+          title: "Failed to save aura points.",
           description: result.error,
         });
       }
@@ -82,8 +80,8 @@ export function PostCard({ post }: PostCardProps) {
 
   useEffect(() => {
     return () => {
-      if (clapTimeoutRef.current) {
-        clearTimeout(clapTimeoutRef.current);
+      if (auraPointTimeoutRef.current) {
+        clearTimeout(auraPointTimeoutRef.current);
       }
     };
   }, []);
@@ -120,14 +118,14 @@ export function PostCard({ post }: PostCardProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="relative">
-              <Button ref={clapButtonRef} variant="ghost" size="icon" onClick={handleClap} className="relative z-10">
-                <Heart className={cn("h-6 w-6", localClaps > 0 && "text-accent fill-accent")} />
+              <Button ref={auraButtonRef} variant="ghost" size="icon" onClick={handleAddAuraPoint} className="relative z-10">
+                <Heart className={cn("h-6 w-6", localAuraPoints > 0 && "text-accent fill-accent")} />
               </Button>
-              {clapBubbles.map(bubble => (
+              {auraPointBubbles.map(bubble => (
                 <div 
                   key={bubble.id} 
                   className="absolute bottom-full left-1/2 -translate-x-1/2 flex items-center justify-center w-8 h-8 rounded-full bg-accent text-accent-foreground font-bold text-xs pointer-events-none animate-clap-bubble"
-                  onAnimationEnd={() => setClapBubbles(prev => prev.filter(b => b.id !== bubble.id))}
+                  onAnimationEnd={() => setAuraPointBubbles(prev => prev.filter(b => b.id !== bubble.id))}
                 >
                   +{bubble.count}
                 </div>
@@ -140,7 +138,7 @@ export function PostCard({ post }: PostCardProps) {
               <Send className="h-6 w-6" />
             </Button>
           </div>
-          <p className="text-sm font-semibold">{displayLikes.toLocaleString()} likes</p>
+          <p className="text-sm font-semibold">{displayAuraPoints.toLocaleString()} aura points</p>
         </div>
         
         <p className="text-xs text-muted-foreground uppercase pt-2">

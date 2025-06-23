@@ -41,7 +41,7 @@ export async function createPost(values: z.infer<typeof postSchema>, authorId: s
       authorPhotoURL: profileData.photoURL,
       content,
       imageUrl: imageUrl || null,
-      likes: 0,
+      auraPoints: 0,
       createdAt: serverTimestamp(),
     });
   } catch (error) {
@@ -99,25 +99,25 @@ export async function updateUserProfile(values: z.infer<typeof profileSchema>) {
     return { success: true };
 }
 
-export async function clapForPost(postId: string, clapCount: number, userId?: string) {
+export async function addAuraPoints(postId: string, points: number, userId?: string) {
   if (!userId) {
-    return { success: false, error: "You must be logged in to clap." };
+    return { success: false, error: "You must be logged in to add aura points." };
   }
   if (!postId) {
     return { success: false, error: "Invalid post ID." };
   }
-  if (clapCount <= 0) {
-    return { success: false, error: "Clap count must be positive." };
+  if (points <= 0) {
+    return { success: false, error: "Aura points must be positive." };
   }
 
   try {
     const postRef = doc(db, "posts", postId);
     await updateDoc(postRef, {
-      likes: increment(clapCount),
+      auraPoints: increment(points),
     });
   } catch (error) {
-    console.error("Error clapping for post:", error);
-    return { success: false, error: "Failed to update claps in database." };
+    console.error("Error adding aura points:", error);
+    return { success: false, error: "Failed to update aura points in database." };
   }
 
   revalidatePath("/");
