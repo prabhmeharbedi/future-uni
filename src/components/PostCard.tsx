@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { addAuraPoints } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { Card } from "@/components/ui/card";
 
 interface AuraPointBubble {
   id: number;
@@ -87,7 +88,7 @@ export function PostCard({ post }: PostCardProps) {
   }, []);
 
   return (
-    <div className="rounded-2xl border border-border/40 bg-card/95 p-1 backdrop-blur supports-[backdrop-filter]:bg-card/60 shadow-lg transition-all hover:shadow-xl">
+    <Card className="shadow-sm transition-all hover:shadow-md">
       <div className="flex items-center p-4">
         <UserAvatar name={post.authorName} imageUrl={post.authorPhotoURL} className="h-10 w-10" />
         <p className="font-semibold text-sm ml-4">{post.authorName}</p>
@@ -97,24 +98,19 @@ export function PostCard({ post }: PostCardProps) {
       </div>
 
       {post.imageUrl && (
-        <div className="relative aspect-square w-full my-2">
+        <div className="relative aspect-square w-full">
           <Image
             src={post.imageUrl}
             alt="Post image"
             fill
-            className="object-cover rounded-lg"
+            className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             data-ai-hint="social media post"
           />
         </div>
       )}
 
-      <div className="px-4 py-2 space-y-3">
-        <div>
-          <span className="font-semibold text-sm mr-2">{post.authorName}</span>
-          <span className="text-sm text-foreground/80">{post.content}</span>
-        </div>
-
+      <div className="p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="relative">
@@ -141,10 +137,15 @@ export function PostCard({ post }: PostCardProps) {
           <p className="text-sm font-semibold">{displayAuraPoints.toLocaleString()} aura points</p>
         </div>
         
+        <div>
+          <span className="font-semibold text-sm mr-2">{post.authorName}</span>
+          <span className="text-sm text-foreground/90">{post.content}</span>
+        </div>
+
         <p className="text-xs text-muted-foreground uppercase pt-2">
           {formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true })}
         </p>
       </div>
-    </div>
+    </Card>
   );
 }

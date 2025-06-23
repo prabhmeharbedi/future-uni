@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/UserAvatar";
-import { Home, PlusSquare, User as UserIcon, LogOut } from "lucide-react";
+import { Home, User as UserIcon, LogOut } from "lucide-react";
 
 export function Header() {
   const { user, loading } = useAuth();
@@ -27,9 +27,9 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="text-2xl font-bold tracking-tight bg-gradient-to-r from-pink-400 to-blue-400 text-transparent bg-clip-text">
+        <Link href="/" className="text-2xl font-bold tracking-tight text-primary">
           Aura
         </Link>
         <div className="flex items-center gap-4">
