@@ -26,7 +26,7 @@ export function PostCard({ post }: PostCardProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   
-  const [displayAuraPoints, setDisplayAuraPoints] = useState(post.auraPoints);
+  const [displayAuraPoints, setDisplayAuraPoints] = useState(post.auraPoints || 0);
   const [localAuraPoints, setLocalAuraPoints] = useState(0);
   const [auraPointBubbles, setAuraPointBubbles] = useState<AuraPointBubble[]>([]);
   const [isPending, startTransition] = useTransition();
@@ -143,7 +143,7 @@ export function PostCard({ post }: PostCardProps) {
         </div>
 
         <p className="text-xs text-muted-foreground uppercase pt-2">
-          {formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true })}
+          {post.createdAt && formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true })}
         </p>
       </div>
     </Card>
