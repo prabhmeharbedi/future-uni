@@ -91,7 +91,7 @@ export function PostCard({ post }: PostCardProps) {
 
   return (
     <>
-      <Card className="shadow-sm transition-all hover:shadow-md">
+      <Card className="shadow-sm transition-all hover:shadow-md overflow-hidden">
         <div className="flex items-center p-4">
           <UserAvatar name={post.authorName} imageUrl={post.authorPhotoURL} className="h-10 w-10" />
           <p className="font-semibold text-sm ml-4">{post.authorName}</p>
@@ -101,7 +101,7 @@ export function PostCard({ post }: PostCardProps) {
         </div>
 
         {post.imageUrl && (
-          <div className="relative aspect-square w-full">
+          <div className="relative aspect-video w-full">
             <Image
               src={post.imageUrl}
               alt="Post image"
@@ -137,7 +137,7 @@ export function PostCard({ post }: PostCardProps) {
                 <Send className="h-6 w-6" />
               </Button>
             </div>
-            <p className="text-sm font-semibold">{displayAuraPoints.toLocaleString()} aura points</p>
+            <p className="text-sm font-semibold">{(displayAuraPoints || 0).toLocaleString()} aura points</p>
           </div>
           
           <div>
