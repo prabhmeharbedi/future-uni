@@ -15,5 +15,16 @@ export interface Post {
   content: string;
   imageUrl?: string;
   auraPoints: number;
+  commentCount?: number;
+  createdAt: Timestamp;
+}
+
+export interface Comment {
+  id: string;
+  postId: string;
+  authorId: string;
+  authorName:string;
+  authorPhotoURL: string;
+  content: string;
   createdAt: Timestamp;
 }

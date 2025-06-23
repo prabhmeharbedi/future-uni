@@ -42,6 +42,7 @@ export async function createPost(values: z.infer<typeof postSchema>, authorId: s
       content,
       imageUrl: imageUrl || null,
       auraPoints: 0,
+      commentCount: 0,
       createdAt: serverTimestamp(),
     });
   } catch (error) {
@@ -118,6 +119,58 @@ export async function addAuraPoints(postId: string, points: number, userId?: str
   } catch (error) {
     console.error("Error adding aura points:", error);
     return { success: false, error: "Failed to update aura points in database." };
+  }
+
+  revalidatePath("/");
+  return { success: true };
+}
+
+const commentSchema = z.object({
+  content: z.string().min(1, "Comment cannot be empty.").max(1000),
+  postId: z.string(),
+});
+
+export async function addComment(values: z.infer<typeof commentSchema>) {
+  const user = auth.currentUser;
+  if (!user) {
+    return { success: false, error: "You must be logged in to comment." };
+  }
+  
+  const validatedFields = commentSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { success: false, error: "Invalid comment." };
+  }
+
+  const { content, postId } = validatedFields.data;
+
+  try {
+    const profileRef = doc(db, "profiles", user.uid);
+    const profileSnap = await getDoc(profileRef);
+    if (!profileSnap.exists()) {
+      return { success: false, error: "User profile not found." };
+    }
+    const profileData = profileSnap.data() as Profile;
+
+    const postRef = doc(db, "posts", postId);
+    
+    // Add the comment to a top-level collection
+    await addDoc(collection(db, "comments"), {
+      postId,
+      authorId: user.uid,
+      authorName: profileData.name,
+      authorPhotoURL: profileData.photoURL,
+      content,
+      createdAt: serverTimestamp(),
+    });
+
+    // Increment comment count on the post
+    await updateDoc(postRef, {
+      commentCount: increment(1),
+    });
+
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    return { success: false, error: "Failed to add comment." };
   }
 
   revalidatePath("/");
