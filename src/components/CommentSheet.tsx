@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
 import { addComment } from "@/lib/actions";
@@ -55,8 +55,7 @@ export function CommentSheet({ isOpen, onOpenChange, postId, postAuthorName }: C
     setLoading(true);
     const q = query(
       collection(db, "comments"),
-      where("postId", "==", postId),
-      orderBy("createdAt", "asc")
+      where("postId", "==", postId)
     );
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -64,6 +63,14 @@ export function CommentSheet({ isOpen, onOpenChange, postId, postAuthorName }: C
       querySnapshot.forEach((doc) => {
         commentsData.push({ id: doc.id, ...doc.data() } as CommentType);
       });
+
+      // Sort comments on the client-side to avoid needing a composite index
+      commentsData.sort((a, b) => {
+        const aTime = a.createdAt?.toDate().getTime() || 0;
+        const bTime = b.createdAt?.toDate().getTime() || 0;
+        return aTime - bTime;
+      });
+
       setComments(commentsData);
       setLoading(false);
     }, (error) => {
