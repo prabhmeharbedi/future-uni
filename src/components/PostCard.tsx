@@ -52,7 +52,7 @@ export function PostCard({ post }: PostCardProps) {
     const clapsToSend = pendingClapsRef.current;
     pendingClapsRef.current = 0; 
 
-    const result = await clapForPost(post.id, clapsToSend);
+    const result = await clapForPost(post.id, clapsToSend, user?.uid);
 
     if (!result.success) {
       setDisplayLikes((prev) => prev - clapsToSend);

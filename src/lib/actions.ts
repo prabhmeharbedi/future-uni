@@ -99,10 +99,8 @@ export async function updateUserProfile(values: z.infer<typeof profileSchema>) {
     return { success: true };
 }
 
-export async function clapForPost(postId: string, count: number) {
-  const user = auth.currentUser;
-
-  if (!user) {
+export async function clapForPost(postId: string, count: number, userId?: string) {
+  if (!userId) {
     return { success: false, error: "You must be logged in to clap." };
   }
   if (!postId || count <= 0) {
