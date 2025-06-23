@@ -2,19 +2,18 @@
 
 import { z } from "zod";
 import { auth, db } from "@/lib/firebase";
-import { addDoc, collection, doc, serverTimestamp, updateDoc, increment } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp, updateDoc, increment, getDoc } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
 import { updateProfile as updateFirebaseProfile } from "firebase/auth";
+import type { Profile } from "@/lib/types";
 
 const postSchema = z.object({
   content: z.string().min(1).max(2000),
   imageUrl: z.string().url().optional().or(z.literal('')),
 });
 
-export async function createPost(values: z.infer<typeof postSchema>) {
-  const user = auth.currentUser;
-
-  if (!user) {
+export async function createPost(values: z.infer<typeof postSchema>, authorId: string) {
+  if (!authorId) {
     return { success: false, error: "You must be logged in to post." };
   }
 
@@ -29,10 +28,17 @@ export async function createPost(values: z.infer<typeof postSchema>) {
   const { content, imageUrl } = validatedFields.data;
 
   try {
+    const profileRef = doc(db, "profiles", authorId);
+    const profileSnap = await getDoc(profileRef);
+    if (!profileSnap.exists()) {
+      return { success: false, error: "User profile not found." };
+    }
+    const profileData = profileSnap.data() as Profile;
+
     await addDoc(collection(db, "posts"), {
-      authorId: user.uid,
-      authorName: user.displayName,
-      authorPhotoURL: user.photoURL,
+      authorId: authorId,
+      authorName: profileData.name,
+      authorPhotoURL: profileData.photoURL,
       content,
       imageUrl: imageUrl || null,
       likes: 0,

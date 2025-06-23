@@ -42,7 +42,7 @@ export function CreatePostForm({ user }: CreatePostFormProps) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    const result = await createPost(values);
+    const result = await createPost(values, user.uid);
 
     if (result.success) {
       toast({ title: "Post created!", description: "Your post is now live." });
