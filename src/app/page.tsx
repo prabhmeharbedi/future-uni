@@ -62,7 +62,7 @@ function LandingPage() {
         <Card className="p-4 md:p-6 shadow-xl bg-card">
           <div className="aspect-video w-full relative">
             <Image
-              src="https://placehold.co/1280x720.png"
+              src="https://images.unsplash.com/photo-1535378620166-273708d44e4c"
               alt="A futuristic robot head floating in a dark room."
               fill
               className="rounded-md object-cover"
