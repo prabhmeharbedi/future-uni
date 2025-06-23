@@ -62,11 +62,11 @@ function LandingPage() {
         <Card className="p-4 md:p-6 shadow-xl bg-card">
           <div className="aspect-video w-full relative">
             <Image
-              src="https://images.unsplash.com/photo-1679403759325-3e5a5b125950"
-              alt="A robot working at a computer terminal in a dark room."
+              src="https://images.unsplash.com/photo-1620712943543-28fc88642a8a"
+              alt="A futuristic robot head floating in a dark room."
               fill
               className="rounded-md object-cover"
-              data-ai-hint="robot terminal"
+              data-ai-hint="robot future"
             />
           </div>
         </Card>
