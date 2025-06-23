@@ -15,10 +15,6 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// This line is for debugging purposes.
-console.log("Attempting to initialize Firebase with API Key:", firebaseConfig.apiKey);
-
-
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
