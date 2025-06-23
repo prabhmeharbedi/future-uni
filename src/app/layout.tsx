@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 
 export const metadata: Metadata = {
   title: "Circuit",
-  description: "A raw, robotic social network.",
+  description: "A social network for creative minds.",
 };
 
 export default function RootLayout({
@@ -15,16 +15,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full dark">
+    <html lang="en" className="h-full">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="font-body antialiased h-full flex flex-col">
+      <body className="font-sans antialiased h-full flex flex-col">
         <AuthProvider>
           <Header />
           <div className="flex-1">

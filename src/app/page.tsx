@@ -24,7 +24,7 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <Card className="p-6 text-center flex flex-col items-center bg-card/50 backdrop-blur-sm border-primary/20 hover:border-primary transition-colors duration-300 shadow-lg">
+    <Card className="p-6 text-center flex flex-col items-center bg-card transition-colors duration-300 shadow-md">
       <div className="mb-4 bg-primary/10 text-primary p-4 rounded-full border border-primary/30">{icon}</div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-muted-foreground">{description}</p>
@@ -39,7 +39,7 @@ function LandingPage() {
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">
           SYSTEM ONLINE.
         </h1>
-        <p className="mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground font-mono">
+        <p className="mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground">
           A raw social network for decentralized minds. Transmit data, earn reputation, and interface with the grid.
         </p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4">
@@ -59,7 +59,7 @@ function LandingPage() {
       </div>
 
       <div className="relative my-16 md:my-24">
-        <Card className="p-4 md:p-6 shadow-2xl bg-card/50 backdrop-blur-lg border-primary/20">
+        <Card className="p-4 md:p-6 shadow-xl bg-card">
           <div className="aspect-video w-full relative">
             <Image
               src="https://placehold.co/1200x675.png"
@@ -77,7 +77,7 @@ function LandingPage() {
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
             A Terminal for Your Consciousness
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground font-mono">
+          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
             Directives for interaction within the system.
           </p>
         </div>
@@ -107,7 +107,7 @@ function LandingPage() {
         >
           Circuit
         </Link>
-        <p className="text-sm text-muted-foreground mt-2 font-mono">
+        <p className="text-sm text-muted-foreground mt-2">
           © {new Date().getFullYear()} Circuit Systems. All rights reserved.
         </p>
       </footer>
