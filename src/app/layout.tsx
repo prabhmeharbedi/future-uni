@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 
 export const metadata: Metadata = {
   title: "Circuit",
-  description: "A social network for creative minds.",
+  description: "A social network for decentralized minds.",
 };
 
 export default function RootLayout({
