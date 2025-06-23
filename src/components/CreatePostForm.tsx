@@ -20,7 +20,7 @@ import { createPost } from "@/lib/actions";
 import { useState } from "react";
 
 const formSchema = z.object({
-  content: z.string().min(1, "Post cannot be empty.").max(500, "Post cannot exceed 500 characters."),
+  content: z.string().min(1, "Post cannot be empty.").max(2000, "Post cannot exceed 2000 characters."),
   imageUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
 });
 

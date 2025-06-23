@@ -28,7 +28,7 @@ import { updateUserProfile } from "@/lib/actions";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  bio: z.string().max(160, "Bio cannot exceed 160 characters.").optional(),
+  bio: z.string().max(500, "Bio cannot exceed 500 characters.").optional(),
   photoURL: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
 });
 

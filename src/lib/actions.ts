@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { updateProfile as updateFirebaseProfile } from "firebase/auth";
 
 const postSchema = z.object({
-  content: z.string().min(1).max(500),
+  content: z.string().min(1).max(2000),
   imageUrl: z.string().url().optional().or(z.literal('')),
 });
 
@@ -49,7 +49,7 @@ export async function createPost(values: z.infer<typeof postSchema>) {
 
 const profileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  bio: z.string().max(160, "Bio cannot exceed 160 characters.").optional(),
+  bio: z.string().max(500, "Bio cannot exceed 500 characters.").optional(),
   photoURL: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
 });
 
