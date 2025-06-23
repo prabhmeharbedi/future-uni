@@ -99,22 +99,25 @@ export async function updateUserProfile(values: z.infer<typeof profileSchema>) {
     return { success: true };
 }
 
-export async function likePost(postId: string, userId?: string) {
+export async function clapForPost(postId: string, clapCount: number, userId?: string) {
   if (!userId) {
-    return { success: false, error: "You must be logged in to like a post." };
+    return { success: false, error: "You must be logged in to clap." };
   }
   if (!postId) {
     return { success: false, error: "Invalid post ID." };
+  }
+  if (clapCount <= 0) {
+    return { success: false, error: "Clap count must be positive." };
   }
 
   try {
     const postRef = doc(db, "posts", postId);
     await updateDoc(postRef, {
-      likes: increment(1),
+      likes: increment(clapCount),
     });
   } catch (error) {
-    console.error("Error liking post:", error);
-    return { success: false, error: "Failed to update likes in database." };
+    console.error("Error clapping for post:", error);
+    return { success: false, error: "Failed to update claps in database." };
   }
 
   revalidatePath("/");

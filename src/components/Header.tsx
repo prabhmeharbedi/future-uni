@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/UserAvatar";
-import { Home, Send, PlusSquare, Compass, Heart } from "lucide-react";
+import { Home, PlusSquare, User as UserIcon, LogOut } from "lucide-react";
 
 export function Header() {
   const { user, loading } = useAuth();
@@ -27,10 +27,10 @@ export function Header() {
   };
 
   return (
-    <header className="border-b bg-background sticky top-0 z-50">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="text-2xl font-semibold tracking-tighter">
-          Echo Chamber
+        <Link href="/" className="text-2xl font-bold tracking-tight bg-gradient-to-r from-pink-400 to-blue-400 text-transparent bg-clip-text">
+          Echo
         </Link>
         <div className="flex items-center gap-4">
           {loading ? (
@@ -38,23 +38,11 @@ export function Header() {
           ) : user ? (
             <>
               <Button variant="ghost" size="icon" asChild>
-                <Link href="/"><Home /></Link>
-              </Button>
-               <Button variant="ghost" size="icon">
-                <Send />
-              </Button>
-               <Button variant="ghost" size="icon">
-                <PlusSquare />
-              </Button>
-               <Button variant="ghost" size="icon">
-                <Compass />
-              </Button>
-               <Button variant="ghost" size="icon">
-                <Heart />
+                <Link href="/"><Home className="h-5 w-5"/></Link>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <UserAvatar name={user.displayName || "User"} imageUrl={user.photoURL || undefined} />
                   </Button>
                 </DropdownMenuTrigger>
@@ -70,14 +58,12 @@ export function Header() {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/">Feed</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile">Profile</Link>
+                   <DropdownMenuItem asChild>
+                    <Link href="/profile"><UserIcon className="mr-2 h-4 w-4" />Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
