@@ -91,30 +91,37 @@ export function PostCard({ post }: PostCardProps) {
 
   return (
     <>
-      <Card className="shadow-sm transition-all hover:shadow-md overflow-hidden">
+      <Card className="shadow-sm transition-all hover:shadow-md">
         <div className="flex items-center p-4">
           <UserAvatar name={post.authorName} imageUrl={post.authorPhotoURL} className="h-10 w-10" />
-          <p className="font-semibold text-sm ml-4">{post.authorName}</p>
+          <div className="ml-4">
+            <p className="font-semibold text-sm">{post.authorName}</p>
+            <p className="text-xs text-muted-foreground">
+                {post.createdAt && formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true })}
+            </p>
+          </div>
           <Button variant="ghost" size="icon" className="ml-auto h-8 w-8">
               <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>
 
-        {post.imageUrl && (
-          <div className="relative aspect-video w-full">
-            <Image
-              src={post.imageUrl}
-              alt="Post image"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              data-ai-hint="social media post"
-            />
-          </div>
-        )}
+        <div className="px-4 pb-4 space-y-4">
+          <p className="text-sm text-foreground/90 whitespace-pre-wrap">{post.content}</p>
 
-        <div className="p-4 space-y-3">
-          <div className="flex items-center justify-between">
+          {post.imageUrl && (
+            <div className="relative aspect-video w-full">
+              <Image
+                src={post.imageUrl}
+                alt="Post image"
+                fill
+                className="object-cover rounded-md"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                data-ai-hint="social media post"
+              />
+            </div>
+          )}
+          
+          <div className="flex items-center justify-between pt-2">
             <div className="flex items-center space-x-2">
               <div className="relative">
                 <Button ref={auraButtonRef} variant="ghost" size="icon" onClick={handleAddAuraPoint} className="relative z-10">
@@ -140,11 +147,6 @@ export function PostCard({ post }: PostCardProps) {
             <p className="text-sm font-semibold">{(displayAuraPoints || 0).toLocaleString()} aura points</p>
           </div>
           
-          <div>
-            <span className="font-semibold text-sm mr-2">{post.authorName}</span>
-            <span className="text-sm text-foreground/90">{post.content}</span>
-          </div>
-
           {(post.commentCount ?? 0) > 0 && (
             <button
               onClick={() => setIsCommentSheetOpen(true)}
@@ -153,10 +155,6 @@ export function PostCard({ post }: PostCardProps) {
               View all {post.commentCount} comments
             </button>
           )}
-
-          <p className="text-xs text-muted-foreground uppercase pt-2">
-            {post.createdAt && formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true })}
-          </p>
         </div>
       </Card>
       <CommentSheet
