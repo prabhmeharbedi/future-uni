@@ -63,7 +63,7 @@ export default function SignupPage() {
 
       toast({
         title: "Account created!",
-        description: "Welcome to Echo Chamber.",
+        description: "Welcome to Aura.",
       });
       router.push("/");
     } catch (error: any) {
@@ -97,7 +97,7 @@ export default function SignupPage() {
 
       toast({
         title: "Account created!",
-        description: "Welcome to Echo Chamber.",
+        description: "Welcome to Aura.",
       });
       router.push("/");
     } catch (error: any) {

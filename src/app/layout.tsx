@@ -5,8 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: "Echo Chamber",
-  description: "A simplified social media platform",
+  title: "Aura",
+  description: "A creative social media platform",
 };
 
 export default function RootLayout({
